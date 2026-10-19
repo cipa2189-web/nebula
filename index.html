@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nebula — общайся со своей стаей</title>
+<meta name="description" content="Nebula — лёгкий realtime-мессенджер с каналами, реакциями и голосовыми комнатами.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235865f2'/%3E%3Cstop offset='1' stop-color='%239b59f2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='30' fill='url(%23g)'/%3E%3Cpath d='M32 14l4.9 12.6L50 31l-13.1 4.4L32 48l-4.9-12.6L14 31l13.1-4.4z' fill='white'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<!-- ======================= APP ======================= -->
+<div id="app" class="app hidden">
+
+  <!-- Server rail -->
+  <nav class="rail">
+    <button class="rail-btn home active" title="Nebula — главная">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>
+      </svg>
+    </button>
+    <div class="rail-sep"></div>
+    <button class="rail-btn server active" data-server="nebula" title="Сервер Nebula">
+      <svg viewBox="0 0 64 64" width="100%" height="100%">
+        <defs>
+          <linearGradient id="nebulaGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#5865f2"/><stop offset="1" stop-color="#9b59f2"/>
+          </linearGradient>
+        </defs>
+        <rect width="64" height="64" rx="16" fill="url(#nebulaGrad)"/>
+        <path d="M32 12l5.6 14.4L52 32l-14.4 5.6L32 52l-5.6-14.4L12 32l14.4-5.6z" fill="#fff" opacity=".95"/>
+        <circle cx="47" cy="17" r="3" fill="#fff" opacity=".65"/>
+      </svg>
+      <span class="rail-pill"></span>
+    </button>
+    <button class="rail-btn add" id="addServerBtn" title="Добавить сервер">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+    <button class="rail-btn ghost" title="Шаблоны серверов">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+    </button>
+    <div class="rail-spacer"></div>
+    <button class="rail-btn ghost" title="Загрузки">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 19h16"/></svg>
+    </button>
+    <button class="rail-btn ghost" title="Настройки">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.09a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>
+    </button>
+  </nav>
+
+  <!-- Channels sidebar -->
+  <aside class="sidebar">
+    <header class="server-header">
+      <div class="server-title">
+        <span class="server-name">Nebula</span>
+        <span class="server-badge" title="Демо-сервер">DEMO</span>
+      </div>
+      <button class="server-menu" title="Меню сервера">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+    </header>
+
+    <div class="channels-scroll" id="channelsScroll">
+      <!-- categories & channels rendered by JS -->
+    </div>
+
+    <!-- Voice connected panel -->
+    <div class="voice-panel hidden" id="voicePanel">
+      <div class="voice-panel-top">
+        <div class="voice-signal">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20"/><path d="M8 7v10"/><path d="M4 10v4"/><path d="M16 7v10"/><path d="M20 10v4"/></svg>
+          <div>
+            <div class="voice-status" id="voiceStatusTitle">Голос подключён</div>
+            <div class="voice-sub" id="voiceStatusSub">Nebula / #общий</div>
+          </div>
+        </div>
+        <button class="voice-disconnect" id="voiceDisconnect" title="Отключиться">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="voice-panel-actions">
+        <button class="vbtn" id="voiceToggleMic" title="Выключить микрофон">
+          <svg class="ic-mic" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/></svg>
+          <svg class="ic-mic-off hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l20 20"/><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 11 5.6"/><path d="M12 17v4"/></svg>
+        </button>
+        <button class="vbtn" id="voiceToggleShare" title="Демонстрация экрана" aria-label="Демонстрация экрана">
+          <svg class="ic-share" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M12 12V7"/><path d="m9.5 9.5 2.5-2.5 2.5 2.5"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        </button>
+        <button class="vbtn" id="voiceToggleDeaf" title="Заглушить звук">
+          <svg class="ic-deaf" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-3a9 9 0 0 1 18 0v5a3 3 0 0 1-3 3h-2"/><path d="M21 19a3 3 0 0 0-3-3"/></svg>
+          <svg class="ic-deaf-off hidden" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l20 20"/><path d="M3 14v-3a9 9 0 0 1 14.1-7.4"/><path d="M21 14v2a3 3 0 0 1-4.6 2.5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- User panel -->
+    <div class="user-panel">
+      <div class="user-panel-me" id="userPanelMe">
+        <div class="avatar avatar-32" id="myAvatar">
+          <span class="avatar-initial" id="myInitial">?</span>
+          <span class="status-dot online"></span>
+        </div>
+        <div class="user-panel-meta">
+          <div class="user-panel-name" id="myName">Гость</div>
+          <div class="user-panel-tag" id="myTag">#0000</div>
+        </div>
+      </div>
+      <div class="user-panel-buttons">
+        <button class="panel-btn" id="panelMic" title="Микрофон">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/></svg>
+        </button>
+        <button class="panel-btn" id="panelSound" title="Звук">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14v-3a9 9 0 0 1 18 0v5a3 3 0 0 1-3 3h-2"/></svg>
+        </button>
+        <button class="panel-btn" id="panelSettings" title="Настройки">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.09a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Chat -->
+  <main class="chat">
+    <header class="chat-header">
+      <div class="chat-header-left">
+        <button class="header-icon mobile-menu" id="mobileMenuBtn" title="Каналы">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <span class="channel-hash" id="chatHash">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M9.2 3.1a1 1 0 0 1 1.1.9l.5 4h3.4l-.4-3.6a1 1 0 1 1 2-.2l.4 3.8h2.2a1 1 0 1 1 0 2h-2l.5 4h2.2a1 1 0 1 1 0 2H16.6l.4 3.6a1 1 0 0 1-2 .2l-.4-3.8h-3.4l.4 3.6a1 1 0 0 1-2 .2l-.4-3.8H7.2a1 1 0 1 1 0-2h2l-.5-4H6.5a1 1 0 1 1 0-2h2l-.4-3.8a1 1 0 0 1 .9-1.1.9.9 0 0 1 .2 0zM11.3 10l-.5 4h3.4l.5-4z"/></svg>
+        </span>
+        <span class="channel-name" id="chatName">общий</span>
+        <span class="channel-topic" id="chatTopic">Главный канал — общаемся обо всём</span>
+      </div>
+      <div class="chat-header-right">
+        <button class="header-icon" id="searchBtn" title="Поиск">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+        <button class="header-icon" title="Уведомления">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        </button>
+        <button class="header-icon" title="Закреплённые">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.8V4h6v6.8l3 4.2H6z"/></svg>
+        </button>
+        <button class="header-icon active" id="membersToggle" title="Список участников">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></svg>
+        </button>
+        <div class="header-search hidden" id="searchBox">
+          <input type="text" id="searchInput" placeholder="Поиск по каналу…">
+        </div>
+      </div>
+    </header>
+
+    <div class="messages" id="messages">
+      <!-- messages rendered by JS -->
+    </div>
+
+    <div class="typing" id="typingBar"></div>
+
+    <div class="composer-wrap">
+      <div class="composer">
+        <button class="composer-icon" id="attachBtn" title="Прикрепить файл">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+        </button>
+        <textarea id="composerInput" rows="1" maxlength="2000" placeholder="Написать в #общий"></textarea>
+        <div class="composer-right">
+          <button class="composer-icon" id="emojiBtn" title="Эмодзи">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg>
+          </button>
+          <button class="composer-icon hidden" id="sendBtn" title="Отправить">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+          </button>
+        </div>
+
+        <!-- Emoji picker -->
+        <div class="emoji-picker hidden" id="emojiPicker"></div>
+      </div>
+      <div class="composer-hint"><b>Enter</b> — отправить · <b>Shift + Enter</b> — новая строка</div>
+    </div>
+  </main>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- Members -->
+  <aside class="members" id="membersPanel">
+    <!-- rendered by JS -->
+  </aside>
+</div>
+
+<!-- ======================= LOGIN ======================= -->
+<div class="login" id="loginScreen">
+  <div class="login-bg"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 64 64" width="56" height="56">
+        <defs><linearGradient id="loginGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5865f2"/><stop offset="1" stop-color="#9b59f2"/></linearGradient></defs>
+        <rect width="64" height="64" rx="16" fill="url(#loginGrad)"/>
+        <path d="M32 12l5.6 14.4L52 32l-14.4 5.6L32 52l-5.6-14.4L12 32l14.4-5.6z" fill="#fff"/>
+      </svg>
+    </div>
+    <h1 class="login-title">С возвращением!</h1>
+    <p class="login-sub">Мы рады снова тебя видеть. Как тебя зовут?</p>
+    <form id="loginForm" autocomplete="off">
+      <label class="login-label" for="loginName">Имя на сервере</label>
+      <input class="login-input" id="loginName" type="text" maxlength="24" placeholder="Например, Алиса" spellcheck="false">
+      <button class="login-btn" type="submit">Войти в Nebula</button>
+    </form>
+    <p class="login-note">Демо-проект. Данные хранятся на вашем сервере.</p>
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal" id="modal">
+    <h3 class="modal-title" id="modalTitle">Создать канал</h3>
+    <p class="modal-sub" id="modalSub">Текстовые каналы — для сообщений, мемов и споров о тако.</p>
+    <form id="modalForm">
+      <label class="modal-label" id="modalLabel">Название канала</label>
+      <div class="modal-input-wrap">
+        <span class="modal-hash" id="modalHash">#</span>
+        <input class="modal-input" id="modalInput" maxlength="32" spellcheck="false" autocomplete="off">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="modalCancel">Отмена</button>
+        <button type="submit" class="btn-primary" id="modalSubmit">Создать канал</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="screen-stage hidden" id="screenStage"></div>
+
+<div class="toasts" id="toasts"></div>
+
+<!-- hidden audio sinks for WebRTC -->
+<div id="remoteAudios"></div>
+
+<script src="/app.js"></script>
+</body>
+</html>

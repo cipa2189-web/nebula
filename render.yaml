@@ -1,0 +1,13 @@
+# Render Blueprint — позволяет задеплоить проект одной кнопкой
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: nebula-chat
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/state
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
